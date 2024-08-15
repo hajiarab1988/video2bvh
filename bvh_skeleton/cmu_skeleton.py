@@ -18,7 +18,6 @@ class CMUSkeleton(object):
             'LeftLeg': 5,
             'LeftFoot': 6,
             'Spine': 7,
-            'Spine1': 8,
             'Neck1': 9,
             'HeadEndSite': 10,
             'LeftArm': 11,
@@ -36,7 +35,9 @@ class CMUSkeleton(object):
             'RightShoulder': -1,
             'RightHandEndSite': -1,
             'LowerBack': -1,
+            'Spine1': 8,
             'Neck': -1
+            
         }
         self.index2keypoint = {v: k for k, v in self.keypoint2index.items()}
         self.keypoint_num = len(self.keypoint2index)
@@ -217,12 +218,6 @@ class CMUSkeleton(object):
                 x_dir = pose[index['LeftUpLeg']] - pose[index['RightUpLeg']]
                 y_dir = None
                 z_dir = pose[index['Spine1']] - pose[joint_idx]
-                order = 'zyx'
-            elif joint == 'Spine1':
-                x_dir = pose[index['LeftArm']] - \
-                    pose[index['RightArm']]
-                y_dir = None
-                z_dir = pose[joint_idx] - pose[index['Spine']]
                 order = 'zyx'
             elif joint == 'Neck1':
                 x_dir = None
