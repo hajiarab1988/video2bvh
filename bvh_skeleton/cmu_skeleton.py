@@ -18,14 +18,15 @@ class CMUSkeleton(object):
             'LeftLeg': 5,
             'LeftFoot': 6,
             'Spine': 7,
-            'Neck1': 8,
-            'HeadEndSite': 9,
-            'LeftArm': 10,
-            'LeftForeArm': 11,
-            'LeftHand': 12,
-            'RightArm': 13,
-            'RightForeArm': 14,
-            'RightHand': 15,
+            'Spine1': 8,
+            'Neck1': 9,
+            'HeadEndSite': 10,
+            'LeftArm': 11,
+            'LeftForeArm': 12,
+            'LeftHand': 13,
+            'RightArm': 14,
+            'RightForeArm': 15,
+            'RightHand': 16,
             'RightHipJoint': -1,
             'RightFootEndSite': -1,
             'LeftHipJoint': -1,
@@ -35,9 +36,7 @@ class CMUSkeleton(object):
             'RightShoulder': -1,
             'RightHandEndSite': -1,
             'LowerBack': -1,
-            'Spine1': -1,
             'Neck': -1
-            
         }
         self.index2keypoint = {v: k for k, v in self.keypoint2index.items()}
         self.keypoint_num = len(self.keypoint2index)
@@ -190,10 +189,13 @@ class CMUSkeleton(object):
         while stack:
             node = stack.pop()
             joint = node.name
+            if joint not in self.keypoint2index or self.keypoint2index[joint] == -1:
+                continue  # Skip if joint is not in keypoint2index or is marked as -1
+    
             joint_idx = self.keypoint2index[joint]
-            
+    
             if node.is_root:
-                channel.extend(pose[joint_idx])
+                channel.extend(pose[joint_idx])            
 
             index = self.keypoint2index
             order = None
@@ -218,6 +220,12 @@ class CMUSkeleton(object):
                 x_dir = pose[index['LeftUpLeg']] - pose[index['RightUpLeg']]
                 y_dir = None
                 z_dir = pose[index['Spine1']] - pose[joint_idx]
+                order = 'zyx'
+            elif joint == 'Spine1':
+                x_dir = pose[index['LeftArm']] - \
+                    pose[index['RightArm']]
+                y_dir = None
+                z_dir = pose[joint_idx] - pose[index['Spine']]
                 order = 'zyx'
             elif joint == 'Neck1':
                 x_dir = None
